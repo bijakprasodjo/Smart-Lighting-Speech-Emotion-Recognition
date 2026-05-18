@@ -1,0 +1,53 @@
+section,item,value,unit,source_or_evidence
+dataset,total_utterances,2911,files,01_dataset_preparation.ipynb
+dataset,ravdess_utterances,672,files,01_dataset_preparation.ipynb
+dataset,emodb_utterances,339,files,01_dataset_preparation.ipynb
+dataset,tess_utterances,1600,files,01_dataset_preparation.ipynb
+dataset,savee_utterances,300,files,01_dataset_preparation.ipynb
+dataset,angry_count,779,files,01_dataset_preparation.ipynb
+dataset,happy_count,723,files,01_dataset_preparation.ipynb
+dataset,neutral_count,695,files,01_dataset_preparation.ipynb
+dataset,sad_count,714,files,01_dataset_preparation.ipynb
+dataset,train_val_test_split,2328/291/292,files,01_dataset_preparation.ipynb
+augmentation,training_samples_after_augmentation,9312,samples,02_preprocessing_features.ipynb
+augmentation,noise_ratio,0.005,ratio,02_preprocessing_features.ipynb
+augmentation,time_stretch_range,0.85-1.15,rate,02_preprocessing_features.ipynb
+augmentation,pitch_shift_range,-3 to +3,semitones,02_preprocessing_features.ipynb
+preprocessing,sampling_rate,16000,Hz,02_preprocessing_features.ipynb / src/preprocessing.py
+preprocessing,duration,3.0,seconds,02_preprocessing_features.ipynb / src/preprocessing.py
+preprocessing,n_mfcc,40,coefficients,02_preprocessing_features.ipynb / src/preprocessing.py
+preprocessing,n_fft,512,samples,02_preprocessing_features.ipynb / src/preprocessing.py
+preprocessing,hop_length,256,samples,02_preprocessing_features.ipynb / src/preprocessing.py
+preprocessing,feature_shape,188 x 40,matrix,02_preprocessing_features.ipynb / src/preprocessing.py
+model,selected_model,Model C_v2,-,04_evaluation_and_tflite.ipynb
+model,architecture,Multi-branch dilated 1D CNN,-,03c_v2_train_model_C_v2.ipynb
+model,dilation_rates,"1, 2, 3",-,03c_v2_train_model_C_v2.ipynb
+model,trainable_parameters,130756,parameters,03c_v2_train_model_C_v2.ipynb
+validation,model_C_v2_val_accuracy,95.19,percent,03c_v2_train_model_C_v2.ipynb
+validation,model_C_v2_val_loss,0.4854,loss,03c_v2_train_model_C_v2.ipynb
+validation,model_C_v2_epochs,61,epochs,03c_v2_train_model_C_v2.ipynb
+test,model_C_v2_combined_test_accuracy,92.12,percent,04_evaluation_and_tflite.ipynb
+test,model_C_v3_combined_test_accuracy,92.47,percent,04_evaluation_and_tflite.ipynb
+test,selected_model_reason,Best deployment trade-off,-,04_evaluation_and_tflite.ipynb
+quantization,tflite_fp32_size,517.8,KB,04_evaluation_and_tflite.ipynb
+quantization,tflite_int8_size,151.2,KB,04_evaluation_and_tflite.ipynb
+quantization,size_reduction_from_tflite_fp32,70.8,percent,04_evaluation_and_tflite.ipynb
+quantization,tflite_int8_accuracy,91.10,percent,04_evaluation_and_tflite.ipynb
+quantization,accuracy_drop,1.03,percentage points,04_evaluation_and_tflite.ipynb
+edge_test,comprehensive_edge_accuracy,97.5,percent,logs/comprehensive_test_output.txt
+edge_test,comprehensive_edge_correct,39/40,files,logs/comprehensive_test_output.txt
+edge_test,mean_edge_inference_latency,2.02,ms,logs/comprehensive_test_output.txt
+streaming,duration,125.4,minutes,logs/stream_log.jsonl
+streaming,total_frames_processed,4774,frames,logs/stream_log.jsonl
+streaming,mean_inference_latency,2.206,ms,logs/stream_log.jsonl
+streaming,p95_inference_latency,4.599,ms,logs/stream_log.jsonl
+streaming,mean_cpu_utilization,17.36,percent,logs/stream_log.jsonl
+streaming,max_cpu_utilization,76.8,percent,logs/stream_log.jsonl
+streaming,mean_ram_utilization,17.53,percent,logs/stream_log.jsonl
+streaming,max_ram_utilization,18.9,percent,logs/stream_log.jsonl
+streaming,mean_confidence,84.85,percent,logs/stream_log.jsonl
+communication,mqtt_mdr,100/100,messages,logs/mqtt_mdr_100_messages_output.txt
+communication,mqtt_mdr_percent,100.0,percent,logs/mqtt_mdr_100_messages_output.txt
+actuation,comprehensive_lamp_command_latency,213.75,ms,logs/comprehensive_test_output.txt
+actuation,streaming_lamp_events,252,events,logs/stream_log.jsonl
+actuation,streaming_lamp_actuation_latency,87.02,ms,logs/stream_log.jsonl
