@@ -1,0 +1,24 @@
+# Core scientific stack
+numpy
+scipy
+pandas
+scikit-learn
+matplotlib
+
+# Audio processing
+librosa
+soundfile
+sounddevice
+
+# Deep learning and model conversion/evaluation
+tensorflow
+ai-edge-litert
+
+# IoT and Raspberry Pi runtime
+paho-mqtt
+requests
+psutil
+
+# Notebook support
+jupyter
+ipykernel
