@@ -1,0 +1,23 @@
+section,item,value,unit,source
+dataset,total_utterances,2911,files,01_dataset_preparation.ipynb
+dataset,train_val_test_split,2328/291/292,files,01_dataset_preparation.ipynb
+preprocessing,feature_shape,188x40,MFCC matrix,02_preprocessing_features.ipynb
+preprocessing,augmented_train_samples,9312,samples,02_preprocessing_features.ipynb
+ablation,model_A_combined_test_accuracy,0.9178,accuracy,04_evaluation_and_tflite.ipynb
+ablation,model_B_combined_test_accuracy,0.8973,accuracy,04_evaluation_and_tflite.ipynb
+ablation,model_C_combined_test_accuracy,0.9178,accuracy,04_evaluation_and_tflite.ipynb
+ablation,model_C_v2_combined_test_accuracy,0.9212,accuracy,04_evaluation_and_tflite.ipynb
+ablation,model_C_v3_combined_test_accuracy,0.9247,accuracy,04_evaluation_and_tflite.ipynb
+selected_model,model_C_v2_validation_accuracy,0.9519,accuracy,03c_v2_train_model_C_v2.ipynb
+selected_model,model_C_v2_params,130756,parameters,03c_v2_train_model_C_v2.ipynb
+tflite,fp32_size,517.8,KB,04_evaluation_and_tflite.ipynb
+tflite,int8_size,151.2,KB,04_evaluation_and_tflite.ipynb
+tflite,int8_accuracy,0.911,accuracy,04_evaluation_and_tflite.ipynb
+edge_test,comprehensive_test_accuracy,0.975,accuracy,comprehensive_test_output.txt
+edge_test,comprehensive_test_correct_total,39/40,files,comprehensive_test_output.txt
+streaming,duration,125.4,minutes,stream_log.jsonl
+streaming,frames_processed,4774,frames,stream_log.jsonl
+streaming,mean_inference_latency,2.206,ms,stream_log.jsonl
+streaming,mean_cpu_utilization,17.36,percent,stream_log.jsonl
+mqtt,message_delivery_ratio,100/100,messages,mqtt_mdr_100_messages_output.txt
+mqtt,message_delivery_ratio_percent,100.0,percent,mqtt_mdr_100_messages_output.txt
