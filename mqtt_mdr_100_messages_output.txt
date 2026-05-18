@@ -1,0 +1,4 @@
+(ta_env) bijakprasodjo@raspberrypi:~/TA_SER/src $ python3 message_delivery_ratio.py
+/home/bijakprasodjo/TA_SER/src/message_delivery_ratio.py:5: DeprecationWarning: Callback API version 1 is deprecated, update to latest version
+  client = mqtt.Client()
+MDR: 100/100 = 100.0%

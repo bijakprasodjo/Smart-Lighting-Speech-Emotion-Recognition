@@ -1,0 +1,148 @@
+(ta_env) bijakprasodjo@raspberrypi:~/TA_SER/src $ python3 comprehensive_test.py
+/home/bijakprasodjo/ta_env/lib/python3.13/site-packages/sklearn/base.py:463: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.6.1 when using version 1.8.0. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+  Loading model: /home/bijakprasodjo/TA_SER/models/model_C_v2_int8.tflite
+INFO: Created TensorFlow Lite XNNPACK delegate for CPU.
+  Model loaded! INT8=True
+  Input  : [  1 188  40] dtype=<class 'numpy.int8'>
+  Output : [1 4] dtype=<class 'numpy.int8'>
+
+==============================================================
+ COMPREHENSIVE TEST — RAVDESS MULTI-ACTOR MULTI-FILE
+==============================================================
+   Dataset : RAVDESS (5 aktor × 2 file x 4 emosi = 40 file)
+   Model   : /home/bijakprasodjo/TA_SER/models/model_C_v2_int8.tflite
+==============================================================
+
+==============================================================
+  😠 ANGRY (10 file dari 5 aktor)
+==============================================================
+  File                                Pred          Conf    ms   OK
+  ----------------------------------------------------------
+  Actor01 03-01-05-01-01-01-01.wav     😠angry       85.5%  2.0ms ✅
+  Actor01 03-01-05-01-01-02-01.wav     😠angry       48.4%  1.9ms ✅
+  Actor02 03-01-05-01-01-01-02.wav     😠angry       87.1%  1.9ms ✅
+  Actor02 03-01-05-01-01-02-02.wav     😠angry       84.0%  1.9ms ✅
+  Actor03 03-01-05-01-01-01-03.wav     😠angry       78.5%  1.9ms ✅
+  Actor03 03-01-05-01-01-02-03.wav     😠angry       94.1%  1.9ms ✅
+  Actor04 03-01-05-01-01-01-04.wav     😠angry       93.8%  1.9ms ✅
+  Actor04 03-01-05-01-01-02-04.wav     😠angry       79.3%  1.9ms ✅
+  Actor05 03-01-05-01-01-01-05.wav     😠angry       92.6%  1.9ms ✅
+  Actor05 03-01-05-01-01-02-05.wav     😠angry       93.0%  1.9ms ✅
+
+  Summary ANGRY:
+     Akurasi      : 10/10 (100%)
+     Avg confidence: 83.6%
+     Avg inference : 1.91ms
+     Distribusi prediksi:
+       😠angry     : 10x ██████████
+
+ Lampu → 😠 angry...
+ Cool blue — menenangkan emosi marah (45ms)
+
+==============================================================
+  😊 HAPPY (10 file dari 5 aktor)
+==============================================================
+  File                                Pred          Conf    ms   OK
+  ----------------------------------------------------------
+  Actor01 03-01-03-01-01-01-01.wav     😊happy       74.2%  4.6ms ✅
+  Actor01 03-01-03-01-01-02-01.wav     😊happy       96.9%  2.2ms ✅
+  Actor02 03-01-03-01-01-01-02.wav     😊happy       68.4%  1.9ms ✅
+  Actor02 03-01-03-01-01-02-02.wav     😊happy       72.7%  1.9ms ✅
+  Actor03 03-01-03-01-01-01-03.wav     😊happy       92.2%  1.9ms ✅
+  Actor03 03-01-03-01-01-02-03.wav     😊happy       87.5%  2.6ms ✅
+  Actor04 03-01-03-01-01-01-04.wav     😊happy       60.5%  1.9ms ✅
+  Actor04 03-01-03-01-01-02-04.wav     😊happy       57.0%  1.9ms ✅
+  Actor05 03-01-03-01-01-01-05.wav     😊happy       87.5%  1.9ms ✅
+  Actor05 03-01-03-01-01-02-05.wav     😊happy       87.1%  1.9ms ✅
+
+  Summary HAPPY:
+     Akurasi      : 10/10 (100%)
+     Avg confidence: 78.4%
+     Avg inference : 2.25ms
+     Distribusi prediksi:
+       😊happy     : 10x ██████████
+
+ Lampu → 😊 happy...
+ Neutral white — mempertahankan mood positif (231ms)
+
+==============================================================
+  😐 NEUTRAL (10 file dari 5 aktor)
+==============================================================
+  File                                Pred          Conf    ms   OK
+  ----------------------------------------------------------
+  Actor01 03-01-01-01-01-01-01.wav     😐neutral     45.7%  2.0ms ✅
+  Actor01 03-01-01-01-01-02-01.wav     😐neutral     41.0%  1.9ms ✅
+  Actor02 03-01-01-01-01-01-02.wav     😠angry       36.3%  1.9ms ❌
+  Actor02 03-01-01-01-01-02-02.wav     😐neutral     53.5%  1.9ms ✅
+  Actor03 03-01-01-01-01-01-03.wav     😐neutral     71.5%  1.9ms ✅
+  Actor03 03-01-01-01-01-02-03.wav     😐neutral     85.2%  1.9ms ✅
+  Actor04 03-01-01-01-01-01-04.wav     😐neutral     69.5%  2.2ms ✅
+  Actor04 03-01-01-01-01-02-04.wav     😐neutral     86.3%  1.9ms ✅
+  Actor05 03-01-01-01-01-01-05.wav     😐neutral     53.9%  2.2ms ✅
+  Actor05 03-01-01-01-01-02-05.wav     😐neutral     55.5%  1.9ms ✅
+
+  Summary NEUTRAL:
+     Akurasi      : 9/10 (90%)
+     Avg confidence: 59.8%
+     Avg inference : 1.95ms
+     Distribusi prediksi:
+       😐neutral   :  9x █████████
+       😠angry     :  1x █
+
+ Lampu → 😐 neutral...
+ Warm white — mendukung fokus kerja (354ms)
+
+==============================================================
+  😢 SAD (10 file dari 5 aktor)
+==============================================================
+  File                                Pred          Conf    ms   OK
+  ----------------------------------------------------------
+  Actor01 03-01-04-01-01-01-01.wav     😢sad         94.1%  1.9ms ✅
+  Actor01 03-01-04-01-01-02-01.wav     😢sad         88.3%  1.9ms ✅
+  Actor02 03-01-04-01-01-01-02.wav     😢sad         97.3%  2.2ms ✅
+  Actor02 03-01-04-01-01-02-02.wav     😢sad         95.3%  1.9ms ✅
+  Actor03 03-01-04-01-01-01-03.wav     😢sad         92.2%  2.0ms ✅
+  Actor03 03-01-04-01-01-02-03.wav     😢sad         94.9%  1.9ms ✅
+  Actor04 03-01-04-01-01-01-04.wav     😢sad         89.8%  1.9ms ✅
+  Actor04 03-01-04-01-01-02-04.wav     😢sad         91.4%  1.9ms ✅
+  Actor05 03-01-04-01-01-01-05.wav     😢sad         81.6%  1.9ms ✅
+  Actor05 03-01-04-01-01-02-05.wav     😢sad         84.0%  2.1ms ✅
+
+  Summary SAD:
+     Akurasi      : 10/10 (100%)
+     Avg confidence: 90.9%
+     Avg inference : 1.95ms
+     Distribusi prediksi:
+       😢sad       : 10x ██████████
+
+ Lampu → 😢 sad...
+ Warm yellow — meningkatkan mood sedih (225ms)
+
+==============================================================
+ SUMMARY FINAL
+==============================================================
+
+  Emosi         Benar  Total     Acc   Avg Conf
+  ---------------------------------------------
+  😠angry           10     10    100%      83.6%
+  😊happy           10     10    100%      78.4%
+  😐neutral          9     10     90%      59.8%
+  😢sad             10     10    100%      90.9%
+  ---------------------------------------------
+  TOTAL            39     40     98%
+
+ CONFUSION MATRIX (baris=true, kolom=predicted):
+                  angry    happy  neutral      sad
+  --------------------------------------------------
+  😠angry            10█       0        0        0 
+  😊happy             0       10█       0        0 
+  😐neutral           1        0        9█       0 
+  😢sad               0        0        0       10█
+
+  (█ = diagonal = prediksi BENAR)
+
+ Avg inference : 2.02 ms per file
+  File test ini: 98%
+==============================================================
