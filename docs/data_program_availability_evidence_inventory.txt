@@ -1,0 +1,305 @@
+Data and Computer Program Availability Evidence Inventory
+============================================================
+
+Repository:
+https://github.com/bijakprasodjo/Smart-Lighting-Speech-Emotion-Recognition
+
+Paper:
+Lightweight Multi-Branch Dilated 1D CNN for Edge-Based Speech Emotion Recognition with Adaptive Smart Lighting Feedback via MQTT
+
+Purpose:
+This inventory maps the paper's major data, model, edge deployment, MQTT, and smart-light actuation claims to the files available in the repository.
+
+1. Dataset and Preprocessing Evidence
+-------------------------------------
+
+1.1 Dataset preparation
+File:
+notebooks/01_dataset_preparation.ipynb
+
+Supports:
+- Multi-corpus dataset construction using RAVDESS, EMODB, TESS, and SAVEE.
+- Label harmonization into four classes: angry, happy, neutral, and sad.
+- Total utterance count: 2,911.
+- Class counts: angry = 779, happy = 723, neutral = 695, sad = 714.
+- Stratified train/validation/test split: 2,328 / 291 / 292 files.
+
+Notes:
+- Raw third-party datasets are not redistributed in this repository.
+- Users must download RAVDESS, EMODB, TESS, and SAVEE from their original sources.
+
+1.2 Feature extraction and augmentation
+File:
+notebooks/02_preprocessing_features.ipynb
+
+Supports:
+- Audio resampling to 16 kHz.
+- Fixed duration of 3 seconds.
+- MFCC extraction with n_mfcc = 40, n_fft = 512, hop_length = 256.
+- Feature shape: (188, 40).
+- Per-dataset StandardScaler normalization.
+- Training-only data augmentation:
+  - Gaussian noise injection with noise ratio 0.005.
+  - Time stretching with rate range 0.85 to 1.15.
+  - Pitch shifting from -3 to +3 semitones.
+- Training expansion to 9,312 samples.
+
+Related runtime file:
+src/preprocessing.py
+
+Related scaler files:
+models/scalers/scaler_ravdess.pkl
+models/scalers/scaler_emodb.pkl
+models/scalers/scaler_savee.pkl
+models/scalers/scaler_tess.pkl
+
+2. Model Training and Ablation Evidence
+---------------------------------------
+
+2.1 Model A
+File:
+notebooks/03a_train_model_A.ipynb
+
+Supports:
+- Single-branch Conv1D baseline.
+- Trainable parameters: 253,252.
+- Validation accuracy: 94.50%.
+- Validation loss: 0.4837.
+- Convergence epoch: 81.
+
+2.2 Model B
+File:
+notebooks/03b_train_model_B.ipynb
+
+Supports:
+- Multi-branch architecture without dilation.
+- Trainable parameters: 130,756.
+- Validation accuracy: 93.47%.
+- Validation loss: 0.5214.
+- Convergence epoch: 54.
+
+2.3 Model C
+File:
+notebooks/03c_train_model_C.ipynb
+
+Supports:
+- Multi-branch dilated architecture using causal padding.
+- Dilation rates: 1, 2, and 4.
+- Trainable parameters: 130,756.
+- Validation accuracy: 93.13%.
+- Validation loss: 0.5167.
+- Convergence epoch: 47.
+
+2.4 Model C_v2
+File:
+notebooks/03c_v2_train_model_C_v2.ipynb
+
+Supports:
+- Selected production model.
+- Multi-branch dilated architecture using same padding.
+- Dilation rates: 1, 2, and 3.
+- Trainable parameters: 130,756.
+- Validation accuracy: 95.19%.
+- Validation loss: 0.4854.
+- Convergence epoch: 61.
+
+2.5 Model C_v3
+File:
+notebooks/03c_v3_train_model_C_v3.ipynb
+
+Supports:
+- Larger multi-branch dilated architecture with filters = 96.
+- Trainable parameters: 187,300.
+- Validation accuracy: 94.16%.
+- Validation loss: 0.4835.
+- Convergence epoch: 100.
+- Highest combined test accuracy: 92.47%, but not selected due to higher parameter count and longer convergence.
+
+3. Evaluation and TFLite Evidence
+---------------------------------
+
+File:
+notebooks/04_evaluation_and_tflite.ipynb
+
+Supports:
+- Test accuracy per corpus for Models A, B, C, C_v2, and C_v3.
+- Combined test accuracy for selected Model C_v2: 92.12%.
+- Per-class precision, recall, and F1-score for Model C_v2.
+- TFLite FP32 conversion.
+- TFLite INT8 post-training quantization.
+- TFLite FP32 size: 517.8 KB.
+- TFLite INT8 size: 151.2 KB.
+- Size reduction from TFLite FP32: 70.8%.
+- TFLite INT8 accuracy: 91.10%.
+- Accuracy drop: 1.03 percentage points.
+
+Related output files:
+models/model_C_v2_int8.tflite
+models/model_metadata.json
+results/evaluation_summary.csv
+
+4. Raspberry Pi Runtime Code Evidence
+-------------------------------------
+
+4.1 Audio stream
+File:
+src/audio_stream.py
+
+Supports:
+- Continuous microphone capture.
+- Native microphone sampling rate: 44.1 kHz.
+- Resampling to 16 kHz.
+- Stereo-to-mono conversion.
+- 3-second circular buffer for sliding-window inference.
+
+4.2 Runtime preprocessing
+File:
+src/preprocessing.py
+
+Supports:
+- Runtime audio preprocessing.
+- Silence trimming, RMS normalization, noise-floor suppression, padding/cropping.
+- MFCC extraction with shape (188, 40).
+- Per-dataset scaler loading from models/scalers.
+
+4.3 TFLite INT8 inference
+File:
+src/inference.py
+
+Supports:
+- Loading the INT8 TensorFlow Lite model.
+- Input tensor shape: (1, 188, 40).
+- Emotion label mapping:
+  - 0 = angry
+  - 1 = happy
+  - 2 = neutral
+  - 3 = sad
+- Probability output and inference latency measurement.
+
+4.4 Streaming pipeline
+File:
+src/main_stream.py
+
+Supports:
+- 3-second inference window.
+- 0.5-second slide interval.
+- 83.3% effective overlap.
+- Confidence thresholding.
+- Spectral flatness speech-like filtering.
+- Majority voting using a 6-frame rolling buffer.
+- Stable prediction publication through MQTT.
+- Sonoff local HTTP actuation.
+- JSONL runtime logging.
+
+4.5 MQTT publication
+File:
+src/mqtt_client.py
+
+Supports:
+- Local Mosquitto broker connection.
+- MQTT QoS 1 publication.
+- Topics:
+  - ser/emotion
+  - ser/lighting
+  - ser/status
+
+4.6 Sonoff smart-light actuation
+File:
+src/sonoff_controller.py
+
+Supports:
+- Sonoff B05 local HTTP API actuation.
+- Emotion-to-lighting mapping:
+  - angry: cool blue, low brightness
+  - happy: neutral white, high brightness
+  - neutral: warm white, medium brightness
+  - sad: warm yellow, high brightness
+- Gradual transition for same-mode lighting changes.
+- Direct transition for cross-mode color/white changes due to API constraints.
+
+5. Edge and System Test Evidence
+--------------------------------
+
+5.1 Comprehensive edge test
+Files:
+src/comprehensive_test.py
+logs/comprehensive_test_output.txt
+
+Supports:
+- 40-file RAVDESS edge test.
+- Test design: 5 actors x 2 files x 4 emotions.
+- Overall result: 39/40 correct = 97.5%.
+- Mean edge inference latency: 2.02 ms.
+- Per-class summary:
+  - angry: 10/10, 100%, avg confidence 83.6%, avg inference 1.91 ms
+  - happy: 10/10, 100%, avg confidence 78.4%, avg inference 2.25 ms
+  - neutral: 9/10, 90%, avg confidence 59.8%, avg inference 1.95 ms
+  - sad: 10/10, 100%, avg confidence 90.9%, avg inference 1.95 ms
+
+5.2 Streaming runtime log
+File:
+logs/stream_log.jsonl
+
+Supports:
+- Continuous streaming duration: 125.4 minutes.
+- Total processed frames: 4,774.
+- Mean inference latency: 2.206 ms.
+- Standard deviation inference latency: 1.033 ms.
+- Minimum inference latency: 1.831 ms.
+- Maximum inference latency: 18.352 ms.
+- P95 inference latency: 4.599 ms.
+- Mean CPU utilization: 17.36%.
+- Maximum CPU utilization: 76.8%.
+- Mean RAM utilization: 17.53%.
+- Maximum RAM utilization: 18.9%.
+- Mean confidence: 84.85%.
+- Lamp state change events: 252.
+- Mean Sonoff HTTP actuation latency during streaming: 87.02 ms.
+
+5.3 MQTT message delivery ratio
+Files:
+src/message_delivery_ratio.py
+logs/mqtt_mdr_100_messages_output.txt
+logs/mqtt_mdr_100_messages_output.json
+
+Supports:
+- MQTT QoS 1 delivery test.
+- 100 attempted messages.
+- 100 delivered messages.
+- Message delivery ratio: 100.0%.
+
+6. Results Files
+----------------
+
+File:
+results/evaluation_summary.csv
+
+Supports:
+- Compact table linking major reported values to source files.
+- Useful for reviewer navigation and data availability verification.
+
+Files:
+results/training_curves_A.png
+results/training_curves_B.png
+results/training_curves_C.png
+results/training_curves_C_v2.png
+results/training_curves_C_v3.png
+
+Supports:
+- Training/validation curve visualization for ablation models.
+
+7. Files Not Included
+---------------------
+
+The following are intentionally not included:
+
+- Raw RAVDESS, EMODB, TESS, and SAVEE audio files.
+  Reason: third-party licensing terms.
+
+- Generated feature arrays such as .npy files.
+  Reason: derived directly from third-party audio datasets and unnecessary if the user runs the preprocessing notebook.
+
+- Local environment files, Wi-Fi credentials, real device IDs, and API keys.
+  Reason: security and privacy.
+
+8. Paper Data Availability Wording
