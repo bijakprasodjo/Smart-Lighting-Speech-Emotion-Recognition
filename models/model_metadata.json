@@ -1,0 +1,223 @@
+{
+  "model_name": "model_C_v2",
+  "selected_for_deployment": true,
+  "selection_reason": "Best trade-off among validation accuracy, parameter efficiency, convergence speed, and edge deployment feasibility.",
+  "task": "Speech Emotion Recognition",
+  "target_classes": [
+    "angry",
+    "happy",
+    "neutral",
+    "sad"
+  ],
+  "label_map": {
+    "0": "angry",
+    "1": "happy",
+    "2": "neutral",
+    "3": "sad"
+  },
+  "input": {
+    "sampling_rate_hz": 16000,
+    "duration_seconds": 3.0,
+    "feature_type": "MFCC",
+    "n_mfcc": 40,
+    "n_fft": 512,
+    "hop_length": 256,
+    "feature_shape": [
+      188,
+      40
+    ],
+    "inference_tensor_shape": [
+      1,
+      188,
+      40
+    ],
+    "normalization": "Per-dataset StandardScaler"
+  },
+  "training_data": {
+    "datasets": [
+      "RAVDESS",
+      "EMODB",
+      "TESS",
+      "SAVEE"
+    ],
+    "total_utterances": 2911,
+    "class_counts": {
+      "angry": 779,
+      "happy": 723,
+      "neutral": 695,
+      "sad": 714
+    },
+    "split": {
+      "train": 2328,
+      "validation": 291,
+      "test": 292
+    },
+    "augmented_training_samples": 9312,
+    "augmentation": {
+      "noise_ratio": 0.005,
+      "time_stretch_range": [
+        0.85,
+        1.15
+      ],
+      "pitch_shift_range_semitones": [
+        -3,
+        3
+      ]
+    }
+  },
+  "architecture": {
+    "type": "Multi-branch dilated 1D CNN",
+    "dilation_rates": [
+      1,
+      2,
+      3
+    ],
+    "padding": "same",
+    "trainable_parameters": 130756,
+    "branch_filters": 64,
+    "integration_filters": 128,
+    "dense_units": 128,
+    "dropout": 0.3
+  },
+  "training": {
+    "optimizer": "Adam",
+    "initial_learning_rate": 0.001,
+    "batch_size": 32,
+    "max_epochs": 100,
+    "early_stopping_patience": 15,
+    "reduce_lr_patience": 7,
+    "label_smoothing_alpha": 0.1,
+    "converged_epoch": 61
+  },
+  "validation_performance": {
+    "validation_accuracy_percent": 95.19,
+    "validation_loss": 0.4854
+  },
+  "test_performance": {
+    "combined_test_accuracy_percent": 92.12,
+    "test_set_size": 292,
+    "per_corpus_accuracy_percent": {
+      "RAVDESS": 80.88,
+      "EMODB": 91.18,
+      "TESS": 100.0,
+      "SAVEE": 76.67
+    },
+    "per_class_metrics": {
+      "angry": {
+        "precision": 0.9733,
+        "recall": 0.9359,
+        "f1_score": 0.9542,
+        "support": 78
+      },
+      "happy": {
+        "precision": 0.8784,
+        "recall": 0.8904,
+        "f1_score": 0.8844,
+        "support": 73
+      },
+      "neutral": {
+        "precision": 0.9067,
+        "recall": 0.9855,
+        "f1_score": 0.9444,
+        "support": 69
+      },
+      "sad": {
+        "precision": 0.9265,
+        "recall": 0.875,
+        "f1_score": 0.9,
+        "support": 72
+      },
+      "macro_avg": {
+        "precision": 0.9212,
+        "recall": 0.9217,
+        "f1_score": 0.9208,
+        "support": 292
+      }
+    }
+  },
+  "quantization": {
+    "method": "TensorFlow Lite post-training INT8 quantization",
+    "tflite_fp32_size_kb": 517.8,
+    "tflite_int8_size_kb": 151.2,
+    "size_reduction_from_tflite_fp32_percent": 70.8,
+    "tflite_int8_accuracy_percent": 91.1,
+    "accuracy_drop_percentage_points": 1.03
+  },
+  "edge_test": {
+    "device": "Raspberry Pi 4B",
+    "model_file": "models/model_C_v2_int8.tflite",
+    "test_subset": "RAVDESS, 5 actors x 2 files x 4 emotions",
+    "total_files": 40,
+    "correct_predictions": 39,
+    "accuracy_percent": 97.5,
+    "mean_inference_ms": 2.02,
+    "per_emotion": {
+      "angry": {
+        "correct": 10,
+        "total": 10,
+        "accuracy_percent": 100.0,
+        "avg_confidence_percent": 83.6,
+        "avg_inference_ms": 1.91
+      },
+      "happy": {
+        "correct": 10,
+        "total": 10,
+        "accuracy_percent": 100.0,
+        "avg_confidence_percent": 78.4,
+        "avg_inference_ms": 2.25
+      },
+      "neutral": {
+        "correct": 9,
+        "total": 10,
+        "accuracy_percent": 90.0,
+        "avg_confidence_percent": 59.8,
+        "avg_inference_ms": 1.95
+      },
+      "sad": {
+        "correct": 10,
+        "total": 10,
+        "accuracy_percent": 100.0,
+        "avg_confidence_percent": 90.9,
+        "avg_inference_ms": 1.95
+      }
+    }
+  },
+  "streaming_test": {
+    "duration_minutes": 125.4,
+    "total_frames_processed": 4774,
+    "mean_inference_latency_ms": 2.206,
+    "std_inference_latency_ms": 1.033,
+    "min_inference_latency_ms": 1.831,
+    "max_inference_latency_ms": 18.352,
+    "p95_inference_latency_ms": 4.599,
+    "mean_cpu_percent": 17.36,
+    "max_cpu_percent": 76.8,
+    "mean_ram_percent": 17.53,
+    "max_ram_percent": 18.9,
+    "mean_confidence_percent": 84.85,
+    "lamp_state_change_events": 252,
+    "mean_lamp_http_actuation_latency_ms": 87.02
+  },
+  "communication_and_actuation": {
+    "mqtt_broker": "localhost:1883",
+    "mqtt_qos": 1,
+    "mqtt_topics": [
+      "ser/emotion",
+      "ser/lighting",
+      "ser/status"
+    ],
+    "mqtt_mdr_test": {
+      "attempted_messages": 100,
+      "delivered_messages": 100,
+      "message_delivery_ratio_percent": 100.0
+    },
+    "smart_bulb": "Sonoff B05",
+    "actuation_method": "Sonoff local HTTP API",
+    "comprehensive_lamp_command_latency_ms": 213.75,
+    "streaming_lamp_actuation_latency_ms": 87.02
+  },
+  "repository": {
+    "url": "https://github.com/bijakprasodjo/Smart-Lighting-Speech-Emotion-Recognition",
+    "raw_third_party_datasets_redistributed": false
+  }
+}
