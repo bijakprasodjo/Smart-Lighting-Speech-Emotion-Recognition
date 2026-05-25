@@ -2,7 +2,7 @@
 
 This repository contains the implementation files, trained TensorFlow Lite model, Raspberry Pi inference scripts, MQTT integration scripts, and experiment logs for the paper:
 
-**Lightweight Multi-Branch Dilated 1D CNN for Edge-Based Speech Emotion Recognition with Adaptive Smart Lighting Feedback via MQTT**
+**Lightweight Multi-Branch Dilated 1D CNN for Edge-Based Speech Emotion Recognition with Adaptive Smart Lighting Feedback**
 
 The system performs real-time Speech Emotion Recognition (SER) on a Raspberry Pi 4B and uses the detected stable emotion label to trigger adaptive smart-lighting feedback. MQTT is used for local event publication, while the physical Sonoff B05 smart bulb is actuated through the Sonoff local HTTP API.
 
